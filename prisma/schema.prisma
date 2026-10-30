@@ -1,0 +1,403 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+
+  @@map("account_status")
+}
+
+enum AccountKind {
+  CUSTOMER
+  MERCHANT
+  SYSTEM
+
+  @@map("account_kind")
+}
+
+enum MerchantStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+
+  @@map("merchant_status")
+}
+
+enum MerchantMemberRole {
+  OWNER
+  ADMIN
+  OPERATOR
+
+  @@map("merchant_member_role")
+}
+
+enum MerchantCreditProjectionStatus {
+  PENDING
+  APPLIED
+
+  @@map("merchant_credit_projection_status")
+}
+
+enum UserRole {
+  CUSTOMER
+  SYSTEM
+
+  @@map("user_role")
+}
+
+enum AccountTransferStatus {
+  RECEIVED
+  VALIDATED
+  RESERVED
+  DISPATCHED
+  UNKNOWN
+  COMPLETED
+  FAILED
+  REJECTED
+
+  @@map("account_transfer_status")
+}
+
+enum AccountTransferType {
+  CUSTOMER_TO_CUSTOMER
+  CUSTOMER_TO_MERCHANT
+  MERCHANT_TO_CUSTOMER
+  MERCHANT_TO_MERCHANT
+  CUSTOMER_TO_SYSTEM
+  SYSTEM_TO_CUSTOMER
+  MERCHANT_TO_SYSTEM
+  SYSTEM_TO_MERCHANT
+  SYSTEM_TO_SYSTEM
+  CUSTOMER_TO_PARTNER_BANK
+  MERCHANT_TO_PARTNER_BANK
+
+  @@map("account_transfer_type")
+}
+
+enum PartnerBank {
+  NATIONAL
+  STATE
+  HOLY
+
+  @@map("partner_bank")
+}
+
+enum PartnerWebhookStatus {
+  DISPATCHED
+  COMPLETED
+  FAILED
+  UNKNOWN
+
+  @@map("partner_webhook_status")
+}
+
+enum OutboxJobStatus {
+  READY
+  PROCESSING
+  DONE
+  UNKNOWN
+  NEEDS_REVIEW
+
+  @@map("outbox_job_status")
+}
+
+enum PartnerReconciliationStatus {
+  OPEN
+  RESOLVED
+
+  @@map("partner_reconciliation_status")
+}
+
+enum IdempotencyStatus {
+  PROCESSING
+  SUCCEEDED
+  REJECTED
+
+  @@map("idempotency_status")
+}
+
+enum LedgerBatchKind {
+  OPENING_FUNDING
+  TRANSFER
+  RESERVE
+  SETTLE
+  RELEASE
+
+  @@map("ledger_batch_kind")
+}
+
+enum LedgerBucket {
+  AVAILABLE
+  LOCKED
+
+  @@map("ledger_bucket")
+}
+
+enum LedgerSide {
+  DEBIT
+  CREDIT
+
+  @@map("ledger_side")
+}
+
+model User {
+  id                        String            @id @default(uuid()) @db.Uuid
+  email                     String            @unique @db.VarChar(254)
+  fullName                  String?           @map("full_name") @db.VarChar(120)
+  phoneNumber               String?           @unique @map("phone_number") @db.VarChar(64)
+  passwordHash              String            @map("password_hash") @db.VarChar(255)
+  role                      UserRole          @default(CUSTOMER)
+  dateOfBirth               DateTime?         @map("date_of_birth") @db.Date
+  authVersion               Int               @default(0) @map("auth_version")
+  createdAt                 DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                 DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  accounts                  Account[]
+  initiatedAccountTransfers AccountTransfer[] @relation("AccountTransferInitiator")
+  idempotencyKeys           IdempotencyKey[]
+  createdMerchants          Merchant[]        @relation("MerchantCreator")
+  merchantMemberships       MerchantMember[]
+
+  @@map("users")
+}
+
+model Merchant {
+  id              String           @id @default(uuid()) @db.Uuid
+  handle          String           @unique @db.VarChar(32)
+  displayName     String           @map("display_name") @db.VarChar(120)
+  status          MerchantStatus   @default(ACTIVE)
+  createdByUserId String           @map("created_by_user_id") @db.Uuid
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy       User             @relation("MerchantCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  members         MerchantMember[]
+  accounts        Account[]
+
+  @@index([createdByUserId, createdAt])
+  @@map("merchants")
+}
+
+model MerchantMember {
+  userId     String             @map("user_id") @db.Uuid
+  merchantId String             @map("merchant_id") @db.Uuid
+  role       MerchantMemberRole @default(OPERATOR)
+  isActive   Boolean            @default(true) @map("is_active")
+  createdAt  DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  user       User               @relation(fields: [userId], references: [id], onDelete: Restrict)
+  merchant   Merchant           @relation(fields: [merchantId], references: [id], onDelete: Restrict)
+
+  @@id([userId, merchantId])
+  @@index([merchantId, isActive])
+  @@map("merchant_members")
+}
+
+model Account {
+  id                        String                     @id @default(uuid()) @db.Uuid
+  ownerId                   String                     @map("owner_id") @db.Uuid
+  label                     String?                    @db.VarChar(80)
+  currency                  String                     @default("USD") @db.Char(3)
+  kind                      AccountKind                @default(CUSTOMER)
+  merchantId                String?                    @map("merchant_id") @db.Uuid
+  availableBalance          BigInt                     @default(0) @map("available_balance")
+  lockedBalance             BigInt                     @default(0) @map("locked_balance")
+  status                    AccountStatus              @default(ACTIVE)
+  createdAt                 DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                 DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  owner                     User                       @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  merchant                  Merchant?                  @relation(fields: [merchantId], references: [id], onDelete: Restrict)
+  sentAccountTransfers      AccountTransfer[]          @relation("AccountTransferSource")
+  receivedAccountTransfers  AccountTransfer[]          @relation("AccountTransferDestination")
+  ledgerEntries             LedgerEntry[]
+  merchantCreditProjections MerchantCreditProjection[]
+
+  // The balance checks are added in the SQL migration because Prisma schema
+  // syntax cannot declare PostgreSQL CHECK constraints. Partial unique indexes
+  // for customer-owner/currency and merchant/currency are also SQL-managed.
+  @@unique([id, currency])
+  @@index([ownerId, status])
+  @@index([merchantId, status])
+  @@map("accounts")
+}
+
+model AccountTransfer {
+  id                       String                     @id @default(uuid()) @db.Uuid
+  initiatorId              String                     @map("initiator_id") @db.Uuid
+  sourceAccountId          String                     @map("source_account_id") @db.Uuid
+  destinationAccountId     String?                    @map("destination_account_id") @db.Uuid
+  amountMinor              BigInt                     @map("amount_minor")
+  currency                 String                     @db.Char(3)
+  transferType             AccountTransferType        @map("transfer_type")
+  partnerBank              PartnerBank?               @map("partner_bank")
+  beneficiaryName          String?                    @map("beneficiary_name") @db.VarChar(120)
+  beneficiaryAccountNumber String?                    @map("beneficiary_account_number") @db.VarChar(64)
+  providerReference        String?                    @unique @map("provider_reference") @db.VarChar(128)
+  status                   AccountTransferStatus      @default(RECEIVED)
+  rejectionCode            String?                    @map("rejection_code") @db.VarChar(64)
+  createdAt                DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  completedAt              DateTime?                  @map("completed_at") @db.Timestamptz(6)
+  initiator                User                       @relation("AccountTransferInitiator", fields: [initiatorId], references: [id], onDelete: Restrict)
+  sourceAccount            Account                    @relation("AccountTransferSource", fields: [sourceAccountId], references: [id], onDelete: Restrict)
+  destinationAccount       Account?                   @relation("AccountTransferDestination", fields: [destinationAccountId], references: [id], onDelete: Restrict)
+  idempotencyKey           IdempotencyKey?
+  outboxJob                OutboxJob?
+  webhookEvents            PartnerWebhookEvent[]
+  reconciliationCase       PartnerReconciliationCase?
+  ledgerBatches            LedgerBatch[]
+  merchantCreditProjection MerchantCreditProjection?
+  events                   AccountTransferEvent[]
+
+  @@index([initiatorId, createdAt])
+  @@index([sourceAccountId, createdAt])
+  @@index([destinationAccountId, createdAt])
+  @@index([status, createdAt])
+  @@index([transferType, createdAt])
+  @@map("account_transfers")
+}
+
+model MerchantCreditProjection {
+  id                String                         @id @default(uuid()) @db.Uuid
+  accountTransferId String                         @unique @map("account_transfer_id") @db.Uuid
+  merchantAccountId String                         @map("merchant_account_id") @db.Uuid
+  amountMinor       BigInt                         @map("amount_minor")
+  status            MerchantCreditProjectionStatus @default(PENDING)
+  createdAt         DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
+  appliedAt         DateTime?                      @map("applied_at") @db.Timestamptz(6)
+  accountTransfer   AccountTransfer                @relation(fields: [accountTransferId], references: [id], onDelete: Restrict)
+  merchantAccount   Account                        @relation(fields: [merchantAccountId], references: [id], onDelete: Restrict)
+
+  @@index([status, createdAt, merchantAccountId])
+  @@index([merchantAccountId, status, createdAt, id], map: "merchant_credit_account_status_created_idx")
+  @@map("merchant_credit_projections")
+}
+
+model OutboxJob {
+  id                String          @id @default(uuid()) @db.Uuid
+  accountTransferId String          @unique @map("account_transfer_id") @db.Uuid
+  status            OutboxJobStatus @default(READY)
+  attempts          Int             @default(0)
+  availableAt       DateTime        @default(now()) @map("available_at") @db.Timestamptz(6)
+  lockedAt          DateTime?       @map("locked_at") @db.Timestamptz(6)
+  lastError         String?         @map("last_error") @db.VarChar(255)
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+  accountTransfer   AccountTransfer @relation(fields: [accountTransferId], references: [id], onDelete: Restrict)
+
+  @@index([status, availableAt, createdAt])
+  @@map("outbox_jobs")
+}
+
+model PartnerWebhookEvent {
+  id                String               @id @default(uuid()) @db.Uuid
+  partnerBank       PartnerBank          @map("partner_bank")
+  eventId           String               @map("event_id") @db.VarChar(128)
+  reportedStatus    PartnerWebhookStatus @default(UNKNOWN) @map("reported_status")
+  providerReference String               @map("provider_reference") @db.VarChar(128)
+  payloadHash       String               @map("payload_hash") @db.Char(64)
+  accountTransferId String?              @map("account_transfer_id") @db.Uuid
+  receivedAt        DateTime             @default(now()) @map("received_at") @db.Timestamptz(6)
+  accountTransfer   AccountTransfer?     @relation(fields: [accountTransferId], references: [id], onDelete: Restrict)
+
+  @@unique([partnerBank, eventId])
+  @@index([providerReference])
+  @@map("partner_webhook_events")
+}
+
+model PartnerReconciliationCase {
+  id                String                      @id @default(uuid()) @db.Uuid
+  accountTransferId String                      @unique @map("account_transfer_id") @db.Uuid
+  partnerBank       PartnerBank                 @map("partner_bank")
+  firstStatus       String                      @map("first_status") @db.VarChar(16)
+  latestStatus      String                      @map("latest_status") @db.VarChar(16)
+  reasonCode        String                      @map("reason_code") @db.VarChar(64)
+  firstEventId      String?                     @map("first_event_id") @db.VarChar(128)
+  latestEventId     String?                     @map("latest_event_id") @db.VarChar(128)
+  observationCount  Int                         @default(1) @map("observation_count")
+  status            PartnerReconciliationStatus @default(OPEN)
+  createdAt         DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(6)
+  resolvedAt        DateTime?                   @map("resolved_at") @db.Timestamptz(6)
+  accountTransfer   AccountTransfer             @relation(fields: [accountTransferId], references: [id], onDelete: Restrict)
+
+  @@index([status, createdAt])
+  @@map("partner_reconciliation_cases")
+}
+
+model IdempotencyKey {
+  id                String            @id @default(uuid()) @db.Uuid
+  userId            String            @map("user_id") @db.Uuid
+  operation         String            @db.VarChar(64)
+  key               String            @db.VarChar(255)
+  requestHash       String            @map("request_hash") @db.Char(64)
+  status            IdempotencyStatus @default(PROCESSING)
+  accountTransferId String?           @unique @map("account_transfer_id") @db.Uuid
+  createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  user              User              @relation(fields: [userId], references: [id], onDelete: Restrict)
+  accountTransfer   AccountTransfer?  @relation(fields: [accountTransferId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, operation, key])
+  @@index([createdAt])
+  @@map("idempotency_keys")
+}
+
+model LedgerBatch {
+  id                String           @id @default(uuid()) @db.Uuid
+  accountTransferId String?          @map("account_transfer_id") @db.Uuid
+  reference         String?          @unique @db.VarChar(128)
+  kind              LedgerBatchKind
+  currency          String           @db.Char(3)
+  createdAt         DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  accountTransfer   AccountTransfer? @relation(fields: [accountTransferId], references: [id], onDelete: Restrict)
+  entries           LedgerEntry[]
+
+  @@unique([accountTransferId, kind])
+  @@map("ledger_batches")
+}
+
+model GeneralLedgerAccount {
+  id      String        @id @default(uuid()) @db.Uuid
+  code    String        @unique @db.VarChar(64)
+  name    String        @db.VarChar(128)
+  entries LedgerEntry[]
+
+  @@map("general_ledger_accounts")
+}
+
+model LedgerEntry {
+  id                     String                @id @default(uuid()) @db.Uuid
+  batchId                String                @map("batch_id") @db.Uuid
+  accountId              String?               @map("account_id") @db.Uuid
+  generalLedgerAccountId String?               @map("general_ledger_account_id") @db.Uuid
+  lineNumber             Int                   @map("line_number")
+  bucket                 LedgerBucket?
+  side                   LedgerSide
+  amountMinor            BigInt                @map("amount_minor")
+  createdAt              DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  batch                  LedgerBatch           @relation(fields: [batchId], references: [id], onDelete: Restrict)
+  account                Account?              @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  generalLedgerAccount   GeneralLedgerAccount? @relation(fields: [generalLedgerAccountId], references: [id], onDelete: Restrict)
+
+  @@unique([batchId, lineNumber])
+  @@index([accountId, createdAt])
+  @@index([generalLedgerAccountId, createdAt])
+  @@map("ledger_entries")
+}
+
+model AccountTransferEvent {
+  id                String                 @id @default(uuid()) @db.Uuid
+  accountTransferId String                 @map("account_transfer_id") @db.Uuid
+  fromStatus        AccountTransferStatus? @map("from_status")
+  toStatus          AccountTransferStatus  @map("to_status")
+  reasonCode        String?                @map("reason_code") @db.VarChar(64)
+  createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  accountTransfer   AccountTransfer        @relation(fields: [accountTransferId], references: [id], onDelete: Restrict)
+
+  @@index([accountTransferId, createdAt])
+  @@map("account_transfer_events")
+}

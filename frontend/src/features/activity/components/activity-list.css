@@ -1,0 +1,32 @@
+.activity-list { margin: 0; padding: 0; list-style: none; }
+.activity-item { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 13px; padding: 16px 0; border-bottom: 1px solid #e9ece6; }
+.activity-item:last-child { border-bottom: 0; }
+.activity-direction { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; color: #315c43; background: #e9efe4; font-size: 18px; }
+.activity-direction.outgoing { color: #6b786e; background: #eef0ec; }
+.activity-direction.internal { color: #486d55; background: #e8eee7; }
+.activity-main, .activity-result { display: grid; min-width: 0; gap: 5px; }
+.activity-main strong { overflow: hidden; color: #2f4537; font-size: 12px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.activity-main > span { color: #829087; font-size: 10px; }
+.activity-main > .activity-review-detail { color: #8b3e32; }
+.activity-reference { overflow-wrap: anywhere; color: #9aa39c; font-family: inherit; font-size: 9px; }
+.activity-result { justify-items: end; text-align: right; }
+.activity-result > strong { color: #34483a; font-size: 12px; font-weight: 650; white-space: nowrap; }
+.activity-result > strong.money-in { color: #2d704a; }
+.activity-result > strong.money-out { color: #415449; }
+.activity-status { padding: 4px 7px; border-radius: 99px; font-size: 9px; white-space: nowrap; }
+.activity-status.complete { color: #356448; background: #eaf2e7; }
+.activity-status.pending { color: #81672c; background: #f6f0df; }
+.activity-status.review { color: #8b3e32; background: #f8e6df; }
+.activity-status.failed { color: #9b4740; background: #f7e9e6; }
+.activity-retry { padding: 2px 0; border: 0; color: #315b42; background: transparent; cursor: pointer; font: inherit; font-size: 10px; font-weight: 650; text-decoration: underline; text-underline-offset: 2px; }
+.activity-retry:disabled { opacity: .55; cursor: wait; }
+.activity-empty { padding: 35px 12px; text-align: center; }
+.activity-empty strong { color: #34503d; font-size: 13px; }
+.activity-empty p { margin: 7px 0 0; color: #7d8a81; font-size: 11px; }
+@media (max-width: 520px) {
+  .activity-item { grid-template-columns: 32px minmax(0, 1fr) auto; gap: 9px; }
+  .activity-direction { width: 32px; height: 32px; }
+  .activity-main strong { font-size: 11px; }
+  .activity-main > span { font-size: 9px; }
+  .activity-result > strong { font-size: 11px; }
+}

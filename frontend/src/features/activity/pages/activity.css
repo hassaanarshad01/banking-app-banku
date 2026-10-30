@@ -1,0 +1,12 @@
+.account-page-shell { min-height: 100vh; padding: 0 clamp(20px, 6vw, 88px) 64px; color: #1b3027; background: #f7f7f4; animation: account-page-enter 350ms ease-out both; }
+.account-page-content { width: min(100%, 900px); margin: 52px auto 0; }
+.account-page-eyebrow { margin: 0; color: #67836b; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; }
+.account-page-content h1 { margin: 12px 0 6px; color: #1f382c; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(36px, 6vw, 48px); font-weight: 400; letter-spacing: -1.5px; }
+.account-page-intro { margin: 0 0 24px; color: #77847b; font-size: 13px; line-height: 1.6; }
+.activity-page-panel { padding: clamp(18px, 3vw, 28px); border: 1px solid #e0e6da; border-radius: 11px; background: #fff; }
+.activity-page-loading { padding: 24px 0; color: #77847b; font-size: 12px; }
+.activity-notice, .activity-page-error { margin: 0 0 14px; padding: 12px 14px; border-radius: 7px; font-size: 11px; }
+.activity-notice { color: #356448; background: #eaf2e7; }
+.activity-page-error { color: #9b4740; background: #f7e9e6; }
+@keyframes account-page-enter { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .account-page-shell { animation: none; } }

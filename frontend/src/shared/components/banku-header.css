@@ -1,0 +1,15 @@
+.banku-header { position: relative; min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid #e2e6df; }
+.banku-header-brand { flex: 0 0 auto; color: #1f4636; font-size: 24px; font-weight: 700; letter-spacing: -1.3px; text-decoration: none; }
+.banku-header-brand span { color: #78934b; }
+.banku-header-nav { display: flex; align-items: center; gap: clamp(10px, 2vw, 24px); }
+.banku-header-nav a { padding: 8px 2px; color: #65766b; font-size: 12px; text-decoration: none; transition: color 150ms ease; }
+.banku-header-nav a:hover, .banku-header-nav a.active { color: #244b38; }
+.banku-header-nav a.active { box-shadow: inset 0 -2px #799253; font-weight: 650; }
+.banku-header-signout { flex: 0 0 auto; padding: 9px 13px; border: 1px solid #d8dfd7; border-radius: 6px; color: #365442; background: transparent; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600; }
+.banku-header-signout:hover { background: #edf1e9; }
+.banku-header-error { position: absolute; top: 66px; right: 0; z-index: 1; margin: 0; color: #a53636; background: #fff; font-size: 11px; }
+@media (max-width: 700px) {
+  .banku-header { min-height: 72px; flex-wrap: wrap; gap: 8px 16px; padding: 13px 0; }
+  .banku-header-nav { order: 3; width: 100%; justify-content: space-between; gap: 8px; }
+  .banku-header-nav a { font-size: 11px; }
+}

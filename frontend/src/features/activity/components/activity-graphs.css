@@ -1,0 +1,35 @@
+.activity-graphs { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(270px, .7fr); gap: 14px; margin: 22px 0; }
+.activity-graph-card { min-width: 0; padding: clamp(17px, 2.5vw, 24px); border: 1px solid #e0e6da; border-radius: 11px; background: #fff; }
+.activity-graph-heading { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 17px; }
+.activity-graph-heading h2 { margin: 6px 0 0; color: #1f382c; font-family: Georgia, 'Times New Roman', serif; font-size: 22px; font-weight: 400; }
+.activity-graph-heading > span { color: #869188; font-size: 9px; white-space: nowrap; }
+.activity-graph-legend { display: flex; justify-content: flex-end; gap: 14px; margin: -5px 8px 4px 0; }
+.activity-graph-legend span, .activity-debit-mix li > span { display: flex; align-items: center; gap: 6px; color: #78867c; font-size: 9px; }
+.activity-graph-legend i, .activity-debit-mix li i { width: 8px; height: 8px; border-radius: 50%; }
+.activity-graph-legend .received { background: #468c5d; }
+.activity-graph-legend .spent { background: #d4b334; }
+.activity-cashflow-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.activity-chart-gridline { stroke: #e8ede6; stroke-width: 1; }
+.activity-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.activity-line.received-line { stroke: #468c5d; }
+.activity-line.spent-line { stroke: #d4b334; }
+.activity-dot { stroke: #fff; stroke-width: 2; }
+.activity-dot.received-dot { fill: #468c5d; }
+.activity-dot.spent-dot { fill: #d4b334; }
+.activity-cashflow-svg text { fill: #849087; font-family: inherit; font-size: 10px; }
+.activity-graph-state { display: grid; min-height: 185px; place-items: center; margin: 0; color: #829087; font-size: 11px; text-align: center; }
+.activity-graph-error { display: grid; min-height: 185px; align-content: center; justify-items: center; gap: 8px; text-align: center; }
+.activity-graph-error p { margin: 0; color: #5a6d60; font-size: 11px; }
+.activity-graph-error code { color: #9b4740; font-size: 9px; }
+.activity-graph-error button { min-height: 34px; margin-top: 4px; padding: 0 12px; border: 1px solid #d5dfd4; border-radius: 6px; color: #315742; background: #f8faf6; cursor: pointer; font: inherit; font-size: 10px; font-weight: 600; }
+.activity-graph-error button:hover { background: #edf2e9; }
+.activity-debit-mix { display: flex; min-height: 190px; align-items: center; justify-content: center; gap: 17px; }
+.activity-debit-donut { display: grid; width: 138px; height: 138px; flex: 0 0 138px; place-items: center; border-radius: 50%; }
+.activity-debit-donut > div { display: grid; width: 88px; height: 88px; align-content: center; justify-items: center; gap: 4px; border-radius: 50%; background: #fff; }
+.activity-debit-donut strong { max-width: 82px; overflow: hidden; color: #315742; font-size: 11px; text-overflow: ellipsis; }
+.activity-debit-donut span { color: #869188; font-size: 8px; }
+.activity-debit-mix ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.activity-debit-mix li { display: grid; gap: 4px; }
+.activity-debit-mix li strong { padding-left: 14px; color: #3d5946; font-size: 10px; font-weight: 600; }
+@media (max-width: 800px) { .activity-graphs { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .activity-graph-heading { align-items: flex-start; flex-direction: column; } .activity-debit-mix { gap: 12px; } .activity-debit-donut { width: 118px; height: 118px; flex-basis: 118px; } .activity-debit-mix li > span { font-size: 8px; } .activity-debit-mix li strong { font-size: 9px; } }

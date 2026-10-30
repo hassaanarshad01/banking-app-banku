@@ -1,0 +1,89 @@
+.dashboard-shell { min-height: 100vh; padding: 0 clamp(24px, 7vw, 104px); color: #1b3027; background: #f7f7f4; animation: dashboard-enter 420ms ease-out both; }
+.dashboard-header { height: 86px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e6df; }
+.dashboard-actions { display: flex; align-items: center; gap: 18px; }
+.transfer-link { color: #315b42; font-size: 12px; font-weight: 600; text-decoration: none; }
+.transfer-link:hover { color: #648450; }
+.dashboard-brand { color: #1f4636; font-size: 24px; font-weight: 700; letter-spacing: -1.3px; text-decoration: none; transition: color 150ms ease, transform 150ms ease; }
+.dashboard-brand:hover { color: #578068; transform: translateY(-1px); }
+.dashboard-brand span { color: #78934b; }
+.signout-button { padding: 9px 15px; border: 1px solid #d8dfd7; border-radius: 6px; color: #365442; background: transparent; cursor: pointer; font: inherit; font-size: 12px; font-weight: 600; transition: background 150ms ease, transform 150ms ease; }
+.signout-button:hover { background: #edf1e9; transform: translateY(-1px); }
+.signout-button:active { transform: translateY(0) scale(.98); }
+.dashboard-welcome { width: min(100%, 680px); margin: clamp(60px, 12vh, 120px) auto; animation: dashboard-content-enter 480ms 80ms ease-out both; }
+.dashboard-eyebrow { color: #578068; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; }
+.dashboard-welcome h1 { margin: 15px 0 8px; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(42px, 7vw, 66px); font-weight: 400; letter-spacing: -2px; }
+.dashboard-email { color: #6f7e74; font-size: 14px; }
+.dashboard-balance { margin-top: 32px; padding: 25px 22px; border: 1px solid #dce4d8; border-radius: 10px; background: #fff; animation: dashboard-content-enter 480ms 180ms ease-out both; transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
+.dashboard-balance:hover { border-color: #c8d7c6; box-shadow: 0 10px 24px #213d2c0d; transform: translateY(-2px); }
+.balance-label { margin: 0 0 10px; color: #6d7c71; font-size: 10px; font-weight: 700; letter-spacing: 1.4px; }
+.dashboard-balance strong { color: #1f4636; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(34px, 6vw, 48px); font-weight: 400; letter-spacing: -1px; }
+.dashboard-balance > p:last-child { margin: 8px 0 0; color: #77847b; font-size: 12px; }
+.dashboard-note { display: flex; align-items: flex-start; gap: 15px; margin-top: 45px; padding: 21px; border: 1px solid #e0e6da; border-radius: 9px; background: #fbfcf8; animation: dashboard-content-enter 480ms 260ms ease-out both; }
+.dashboard-check { width: 28px; height: 28px; flex: 0 0 28px; display: grid; place-items: center; border-radius: 50%; color: #316148; background: #e4eee1; }
+.dashboard-note strong { color: #315742; font-size: 13px; }
+.dashboard-note p { margin: 5px 0 0; color: #77847b; font-size: 12px; line-height: 1.6; }
+.dashboard-error { margin-top: 14px; color: #a53636; font-size: 12px; }
+.dashboard-content { width: min(100%, 900px); margin: 55px auto 64px; }
+.dashboard-intro { margin-bottom: 25px; }
+.dashboard-intro > p:last-child { margin: 0; color: #77847b; font-size: 13px; }
+.dashboard-money-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: clamp(22px, 4vw, 34px); border: 1px solid #dce4d8; border-radius: 12px; background: #fff; box-shadow: 0 14px 38px #213d2c08; animation: dashboard-content-enter 420ms 50ms ease-out both; }
+.dashboard-money-copy .balance-label { margin: 0 0 9px; color: #6d7c71; font-size: 10px; font-weight: 700; letter-spacing: 1.3px; }
+.dashboard-money-copy > strong { color: #1f4636; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(38px, 7vw, 54px); font-weight: 400; letter-spacing: -1px; }
+.dashboard-money-copy > p:last-child { margin: 8px 0 0; color: #77847b; font-size: 11px; }
+.dashboard-send-button { display: inline-flex; align-items: center; justify-content: space-between; gap: 25px; min-height: 47px; padding: 0 17px; border-radius: 7px; color: #fff; background: #244b38; font-size: 12px; font-weight: 600; text-decoration: none; transition: background 150ms ease, transform 150ms ease; }
+.dashboard-send-button:hover { background: #315d45; transform: translateY(-1px); }
+.dashboard-send-button span { font-size: 17px; }
+.dashboard-reserved { display: flex; grid-column: 1 / -1; justify-content: space-between; gap: 15px; padding-top: 17px; border-top: 1px solid #e9ece6; color: #76837a; font-size: 11px; }
+.dashboard-reserved strong { color: #44594a; font-weight: 600; }
+.dashboard-activity-panel { margin-top: 27px; padding: clamp(19px, 3vw, 27px); border: 1px solid #e0e6da; border-radius: 11px; background: #fff; animation: dashboard-content-enter 420ms 100ms ease-out both; }
+.dashboard-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin-bottom: 12px; }
+.dashboard-section-heading h2 { margin: 6px 0 0; color: #1f382c; font-family: Georgia, 'Times New Roman', serif; font-size: 25px; font-weight: 400; }
+.dashboard-section-heading > a { color: #43684e; font-size: 11px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.dashboard-section-heading > a:hover { color: #799253; }
+.dashboard-activity-message { padding: 22px 0; color: #76837a; font-size: 12px; }
+.dashboard-insights { margin-top: 20px; padding: clamp(19px, 3vw, 27px); border: 1px solid #e0e6da; border-radius: 11px; background: #fff; animation: dashboard-content-enter 420ms 140ms ease-out both; }
+.dashboard-insights-heading, .dashboard-chart-title { display: flex; align-items: end; justify-content: space-between; gap: 12px; }
+.dashboard-insights-heading h2 { margin: 6px 0 0; color: #1f382c; font-family: Georgia, 'Times New Roman', serif; font-size: 25px; font-weight: 400; }
+.dashboard-insights-heading > span, .dashboard-chart-title > span { color: #869188; font-size: 10px; }
+.dashboard-insights-totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0 16px; }
+.dashboard-insights-totals > div { display: grid; gap: 5px; padding: 12px 13px; border-radius: 7px; background: #f7f9f5; }
+.dashboard-insights-totals span { color: #7b887e; font-size: 10px; }
+.dashboard-insights-totals strong { color: #315742; font-size: 15px; font-weight: 600; }
+.dashboard-insights-totals strong.negative { color: #a66c48; }
+.dashboard-insights-totals strong.positive { color: #315742; }
+.dashboard-chart-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(250px, .8fr); gap: 13px; }
+.dashboard-chart-card { min-width: 0; padding: 16px; border: 1px solid #e9ede7; border-radius: 8px; background: #fdfefc; }
+.dashboard-chart-title { align-items: center; margin-bottom: 12px; }
+.dashboard-chart-title h3 { margin: 0; color: #365442; font-size: 11px; font-weight: 650; }
+.dashboard-chart-legend { display: flex; gap: 10px; }
+.dashboard-chart-legend span, .dashboard-debit-mix li > span { display: flex; align-items: center; gap: 6px; color: #78867c; font-size: 9px; }
+.dashboard-chart-legend i, .dashboard-debit-mix li i { width: 7px; height: 7px; border-radius: 50%; }
+.dashboard-chart-legend i.credits { background: #63866c; }
+.dashboard-chart-legend i.debits { background: #b98a61; }
+.dashboard-cashflow-chart { display: block; width: 100%; height: auto; overflow: visible; }
+.dashboard-cashflow-chart line { stroke: #e7ece5; stroke-width: 1; }
+.dashboard-cashflow-chart rect.cashflow-credit { fill: #63866c; }
+.dashboard-cashflow-chart rect.cashflow-debit { fill: #b98a61; }
+.dashboard-cashflow-chart text { fill: #849087; font-family: inherit; font-size: 10px; }
+.dashboard-chart-empty { display: grid; min-height: 126px; place-items: center; margin: 0; color: #8a958d; font-size: 10px; text-align: center; }
+.dashboard-debit-mix { display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 150px; }
+.dashboard-donut { display: grid; width: 122px; height: 122px; flex: 0 0 122px; place-items: center; border-radius: 50%; }
+.dashboard-donut > div { display: grid; width: 78px; height: 78px; align-content: center; justify-items: center; gap: 3px; border-radius: 50%; background: #fff; }
+.dashboard-donut strong { max-width: 72px; overflow: hidden; color: #315742; font-size: 10px; text-overflow: ellipsis; }
+.dashboard-donut span { color: #869188; font-size: 8px; }
+.dashboard-debit-mix ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.dashboard-debit-mix li { display: grid; gap: 4px; }
+.dashboard-debit-mix li strong { padding-left: 13px; color: #3d5946; font-size: 10px; font-weight: 600; }
+.dashboard-insights-loading { min-height: 100px; color: #76837a; font-size: 12px; }
+.dashboard-account-link { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; gap: 13px; margin-top: 16px; padding: 17px 19px; border: 1px solid #e0e6da; border-radius: 10px; color: #35513e; background: #fbfcf8; text-decoration: none; transition: border-color 150ms ease, transform 150ms ease; }
+.dashboard-account-link:hover { border-color: #c7d5c3; transform: translateY(-1px); }
+.dashboard-account-link > span:nth-child(2) { display: grid; gap: 4px; }
+.dashboard-account-link strong { font-size: 12px; }
+.dashboard-account-link small { color: #7d8981; font-size: 10px; }
+.dashboard-account-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: #356044; background: #e8eee2; font-size: 17px; }
+@media (max-width: 600px) { .dashboard-content { margin-top: 36px; } .dashboard-money-card { grid-template-columns: 1fr; gap: 16px; } .dashboard-send-button { width: 100%; } }
+@media (max-width: 700px) { .dashboard-chart-grid { grid-template-columns: 1fr; } }
+@media (max-width: 430px) { .dashboard-insights-totals { gap: 6px; } .dashboard-insights-totals > div { padding: 10px 8px; } .dashboard-insights-totals strong { font-size: 12px; } .dashboard-insights-heading { align-items: flex-start; flex-direction: column; } }
+
+@keyframes dashboard-enter { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dashboard-content-enter { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }

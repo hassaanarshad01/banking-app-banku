@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "outDir": "dist",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "chaos-bank/**/*.ts", "generated/prisma/**/*.ts"],
+  "exclude": ["node_modules", "dist", "frontend"]
+}
